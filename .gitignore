@@ -1,0 +1,81 @@
+﻿# Python bytecode
+__pycache__/
+*.py[cod]
+*.so
+
+# Exlude text files
+*.docx
+team_ids.txt
+
+# Exclude pdf files
+*.pdf
+
+# Exclude specific notebooks
+notebooks/
+
+# Exclude thesis folder
+thesis/
+
+# Exclude specific python files
+fpl.simulation.py
+fpl.data.teams_info_with_authentication.py
+
+# Virtual environments (if created in project folder)
+venv/
+env/
+ENV/
+
+# IDE settings (personal preferences)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store      # macOS
+Thumbs.db      # Windows
+
+# FPL Data files (large datasets)
+*.csv
+*.json
+*.xlsx
+*.xls
+/data/
+
+# Model files (large binary files)
+*.pkl
+*.joblib
+*.model
+saved_models/
+
+# Results and outputs (generated content)
+results/
+outputs/
+plots/
+figures/
+predictions/
+presentation/
+simulation_data/
+
+# Optuna studies (databases)
+*.db
+*.sqlite
+*.sqlite3
+optuna_studies/
+
+# Logs (generated)
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+cache/
+.cache/
+
+# Local config overrides (keep main config.yaml)
+config_local.yaml
+config_test.yaml

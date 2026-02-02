@@ -1,0 +1,130 @@
+﻿# FPL Prediction Project Configuration
+
+TEAM_ID:                            # Your FPL team ID (optional, can be overridden via --team-id)
+initial_transfers: 1                # Set to a number (0–5) or "auto" to detect automatically
+
+
+data:
+  current_season: "25-26"
+  # Note: if you use season "21-22" or earlier you should exclude the features that start with "expected_"
+  past_seasons: ["22-23", "23-24", "24-25"]
+  save_data: true
+  hard_fetch: false
+  player_status: 
+    - "a"   # available
+    - "d"   # doubtful
+    - "i"   # injured
+    - "u"   # unavailable
+
+# Paths
+paths:
+  data_dir: "data" 
+  models_dir: "models"
+  results_dir: "results"
+  predictions_dir: "predictions"
+  optuna_storage: "sqlite:///optuna_studies.db"
+
+# Feature Engineering Parameters
+feature_engineering:
+  rolling_window: 8             # Window for general averages
+  difficulty_window: 4          # Window for difficulty-based averages
+  team_window: 4                # Window for team goals scored/conceded
+  form_window: 3                # Window for form and minutes calculations
+  
+  # Feature Selection - from features.py
+  feature_set: "auto"           # Auto-generate based on window parameters above
+
+  # Decide on whereas you want to scale the features
+  scale_features: true
+  
+  # Columns to scale - from features.py
+  columns_to_scale: "auto"      # Auto-generate based on window parameters above
+
+# Model Training Parameters
+model:
+  model_type: "gbm"              # "random forest", "gbm", "lgbm"
+  target_column: "total_points"
+  include_test_set: true
+  save_model: true
+
+  # Categorical features
+  categorical_features:
+    - "position"
+    - "team_code"
+    - "opponent_team_code"
+    - "code"
+    - "season"
+
+  # Sample weighting parameters
+  sample_weights:
+    alpha_recency: 0.0          # Weight for recency (higher = more weight for recent data)
+    alpha_points: 0.0           # Weight for points (higher = more weight to high scoring players)
+    alpha_combined: 0.5         # Combined weight factor
+
+  # Hyperparameter Optimization
+  hyperparameter_tuning:
+    n_trials: 100               # Number of Optuna trials
+
+# Team Selection Parameters
+team_selection:
+  valid_status: ["a", "d"]      # Player status to consider
+  use_wildcard: false
+  use_freehit: false
+
+  # Wildcard Optimization
+  wildcard:
+    budget: 1000                # Budget
+    starters_budget_pct: 0.83   # Percentage of total budget for starters only - remaining goes to bench
+    num_starters: 11            # Number of starters players to select - increased num_starters -> increase starters_budget_pct
+
+    # Future gameweek weights (decreasing by 0.2 each gameweek)
+    future_weights: null        # Default in class {1: 1.0, 2: 0.8, 3: 0.6, 4: 0.4, 5: 0.2}
+
+  # Freehit Optimization
+  freehit:
+    budget: 1000                # Budget
+    starters_budget_pct: 0.84   # Percentage of total budget for starters only - remaining goes to bench
+    
+# Transfer Optimization Parameters
+transfers:
+  transfer_engine: "beam"       # Alternatively "greedy"
+
+  budget: 1000                  # Total budget constraint
+  initial_transfers: 5          # Free transfers available
+  valid_status: ["a", "d"]      # "d" = doubtful, possible to remove it, or add "i" = injured
+  max_transfers: 5            
+  debug: false
+
+  # Beam Search Transfer Engine
+  beam:
+    beam_width: 100             # Number of states to maintain in beam, increased beam -> more time to run
+
+  # Greedy Transfer Engine
+  greedy:
+    max_threshold: 0.3          # Maximum threshold for transfer consideration
+    min_threshold: 0.1          # Minimum threshold to accept transfer
+    threshold_step: 0.05        # Step size for threshold adjustment
+    top_transfers_to_track: 20
+    must_have_threshold: 0.15
+    future_min_threshold: 0.02
+
+# Collection of Ranking Data
+fpl_ranking_data_collection:
+  total_managers: 100000        # Number of top managers to fetch
+  batch_size: 100               # Number of managers to process before saving a checkpoint
+  max_workers: 8                # Maximum number of concurrent threads (be careful not to overwhelm the API)
+  base_delay: 0.2               # Base delay between requests in seconds (reduced for concurrent)
+  jitter: 0.1                   # Random jitter to add to delay
+
+
+# Logging Configuration
+logging:
+  level: "INFO"                 # DEBUG, INFO, WARNING, ERROR
+  format: "%(name)s - %(levelname)s - %(message)s"
+  file: "fpl_prediction.log"
+
+# FPL Rules
+fpl_rules:
+  team_size: 15
+  max_per_team: 3
+  max_transfers: 5              # FPL banking transfers limit
