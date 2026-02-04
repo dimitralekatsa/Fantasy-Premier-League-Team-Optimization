@@ -2,7 +2,7 @@
 
 TEAM_ID:                            # Your FPL team ID (optional, can be overridden via --team-id)
 initial_transfers: 1                # Set to a number (0–5) or "auto" to detect automatically
-
+                                    # Better set to "auto" if no prior Wildcard / Free Hit usage in the season
 
 data:
   current_season: "25-26"
@@ -26,10 +26,10 @@ paths:
 
 # Feature Engineering Parameters
 feature_engineering:
-  rolling_window: 8             # Window for general averages
+  rolling_window: 5             # Window for general averages
   difficulty_window: 4          # Window for difficulty-based averages
-  team_window: 4                # Window for team goals scored/conceded
-  form_window: 3                # Window for form and minutes calculations
+  team_window: 8                # Window for team goals scored/conceded
+  form_window: 5                # Window for form and minutes calculations
   
   # Feature Selection - from features.py
   feature_set: "auto"           # Auto-generate based on window parameters above
@@ -42,7 +42,7 @@ feature_engineering:
 
 # Model Training Parameters
 model:
-  model_type: "gbm"              # "random forest", "gbm", "lgbm"
+  model_type: "random_forest"   # "random forest", "gbm", "lgbm"
   target_column: "total_points"
   include_test_set: true
   save_model: true
