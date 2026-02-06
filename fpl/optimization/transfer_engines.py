@@ -82,7 +82,7 @@ class BeamSearchFPLOptimizer:
             self.players_df, found_all = backfill_missing_players(
                 df=self.players_df,
                 missing_players=missing_players,
-                points_prefix=self.points_prefix
+                prefix=self.points_prefix
             )
 
             if not found_all:
@@ -1000,7 +1000,7 @@ class GreedyFPLTransferOptimizer:
             self.players_df, found_all = backfill_missing_players(
                 df=self.players_df,
                 missing_players=missing_players,
-                points_prefix=self.points_prefix
+                prefix=self.points_prefix
             )
 
             if not found_all:

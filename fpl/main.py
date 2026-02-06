@@ -675,12 +675,11 @@ class FPLPipeline:
                                             num_starters=team_selection_config["wildcard"]["num_starters"],
                                             future_weights=team_selection_config["wildcard"]["future_weights"],
                                             **common_params)
-            optimal_team, starters_upcoming_gw, updated_predictions = wildcard.optimize_wildcard()
+            optimal_team, starters_upcoming_gw = wildcard.optimize_wildcard()
             return {
                 "type": "wildcard",
                 "optimal_team": optimal_team,
                 "starters_upcoming_gw": starters_upcoming_gw,
-                "updated_predictions": updated_predictions,
             }
         elif team_selection_config["use_freehit"]:
             freehit = FreeHitOptimization(budget=team_selection_config["freehit"]["budget"],

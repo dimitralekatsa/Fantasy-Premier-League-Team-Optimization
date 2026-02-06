@@ -327,25 +327,22 @@ def backfill_missing_players(df: pd.DataFrame, missing_players: list, prefix: st
     
     train_df = pd.read_csv(training_path)
     
-    required_columns = ["player_id", "player_name", "code","team", "team_id", "team_code", "position", "status", "now_cost"]
+    required_columns = [
+        "player_id", "player_name", "code", "team", "team_id", 
+        "team_code", "position", "status", "now_cost", "season", "gameweek",
+    ]
 
     missing_cols = [c for c in required_columns if c not in train_df.columns]
     if missing_cols:
         print(f"Training data is missing required columns: {missing_cols}. Cannot backfill missing players.")
         return df, False
-    
-    seasons = df["season"].unique()
-    if len(seasons) != 1:
-        print("DataFrame contains multiple seasons. Cannot backfill missing players.")
-        return df, False
-    season_value = seasons[0]
 
     for pid in missing_players:
         player_data = train_df[train_df["player_id"] == pid]
         if player_data.empty:
             return df, False
                
-        player_season_data = player_data[player_data.season == season_value]
+        player_season_data = player_data[player_data.season == player_data.season.max()]
         
         if player_season_data.empty:
             return df, False
@@ -359,6 +356,6 @@ def backfill_missing_players(df: pd.DataFrame, missing_players: list, prefix: st
         
         # Append the new row to the dataframe
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-        print(f"Backfilled missing player ID {pid} - {player_info.get('player_name', 'Unknown')}")
+        print(f"Backfilled missing player ID: {pid} - {player_info.get('player_name', 'Unknown')}")
 
     return df, True
