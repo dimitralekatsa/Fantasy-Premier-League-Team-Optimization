@@ -921,8 +921,8 @@ class FPLFutureFixturesProcessor:
         """
         Process future fixtures data with team metadata
         """
-        file_season = self.convert_season_format(self.current_season, target="file")
-        long_folder_season = self.convert_season_format(self.current_season, target="long_folder")
+        file_season = convert_season_format(self.current_season, target="file")
+        long_folder_season = convert_season_format(self.current_season, target="long_folder")
 
         if raw_df is None:
             try:
